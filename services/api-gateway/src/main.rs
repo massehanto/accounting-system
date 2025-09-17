@@ -1,54 +1,93 @@
-mod service_discovery;
-mod proxy;
+mod routes;
 mod middleware;
-mod health;
+mod services;
+mod config;
 
-use axum::{routing::{any, get, post}, Router, middleware as axum_middleware};
-use service_discovery::*;
-use proxy::*;
-use middleware::*;
-use health::*;
+use axum::{
+    routing::get,
+    Router,
+};
 use std::sync::Arc;
 use tower::ServiceBuilder;
-use tower_http::{cors::CorsLayer, timeout::TimeoutLayer, trace::TraceLayer};
+use tower_http::{
+    cors::CorsLayer,
+    trace::TraceLayer,
+    timeout::TimeoutLayer,
+};
+use tracing::info;
+use std::time::Duration;
+
+#[derive(Clone)]
+pub struct AppState {
+    config: Arc<config::GatewayConfig>,
+    service_registry: Arc<services::ServiceRegistry>,
+}
 
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
     dotenv::dotenv().ok();
+    
     tracing_subscriber::fmt()
         .with_env_filter("info,api_gateway=debug")
         .init();
 
-    let service_registry = Arc::new(ServiceRegistry::new().await?);
-    
-    // Start health monitoring
-    let health_monitor = service_registry.clone();
-    tokio::spawn(async move {
-        health_monitor.start_health_monitoring().await;
-    });
+    info!("Starting API Gateway...");
+
+    let config = Arc::new(config::GatewayConfig::from_env()?);
+    let service_registry = Arc::new(services::ServiceRegistry::new(&config));
+
+    let app_state = AppState {
+        config: config.clone(),
+        service_registry,
+    };
 
     let app = Router::new()
-        .route("/health", get(health_check))
-        .route("/services/register", post(register_service))
-        .route("/services/status", get(get_all_service_statuses))
-        .route("/api/*path", any(proxy_request))
+        .route("/health", get(routes::health_check))
+        
+        // Auth routes
+        .nest("/api/v1/auth", routes::auth_routes())
+        
+        // Company management routes
+        .nest("/api/v1/companies", routes::company_routes())
+        
+        // Chart of accounts routes
+        .nest("/api/v1/accounts", routes::account_routes())
+        
+        // General ledger routes
+        .nest("/api/v1/ledger", routes::ledger_routes())
+        
+        // Tax routes
+        .nest("/api/v1/tax", routes::tax_routes())
+        
+        // Accounts payable routes
+        .nest("/api/v1/payables", routes::payable_routes())
+        
+        // Accounts receivable routes
+        .nest("/api/v1/receivables", routes::receivable_routes())
+        
+        // Inventory routes
+        .nest("/api/v1/inventory", routes::inventory_routes())
+        
+        // Reporting routes
+        .nest("/api/v1/reports", routes::reporting_routes())
+        
         .layer(
             ServiceBuilder::new()
                 .layer(TraceLayer::new_for_http())
-                .layer(TimeoutLayer::new(std::time::Duration::from_secs(60)))
                 .layer(CorsLayer::permissive())
-                .layer(axum_middleware::from_fn_with_state(
-                    service_registry.clone(),
-                    auth_middleware
+                .layer(TimeoutLayer::new(Duration::from_secs(30)))
+                .layer(axum::middleware::from_fn_with_state(
+                    app_state.clone(),
+                    middleware::auth_middleware
                 ))
         )
-        .with_state(service_registry);
+        .with_state(app_state);
 
     let bind_addr = std::env::var("API_GATEWAY_BIND")
-        .unwrap_or_else(|_| "0.0.0.0:8080".to_string());
-    
+        .unwrap_or_else(|_| "0.0.0.0:3000".to_string());
+
     let listener = tokio::net::TcpListener::bind(&bind_addr).await?;
-    tracing::info!("API Gateway listening on {}", listener.local_addr()?);
+    info!("API Gateway listening on {}", listener.local_addr()?);
     
     axum::serve(listener, app).await?;
     Ok(())

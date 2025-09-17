@@ -1,63 +1,88 @@
 #!/bin/bash
 
-# Load environment variables
-source .env
+# Start all services for Indonesian Accounting System
+
+echo "Starting Indonesian Accounting System Services..."
+
+# Colors for output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+NC='\033[0m' # No Color
+
+# Function to start a service
+start_service() {
+    local service_name=$1
+    local service_path=$2
+    local port=$3
+    
+    echo -e "${YELLOW}Starting $service_name on port $port...${NC}"
+    
+    cd "$service_path" || {
+        echo -e "${RED}Failed to change to $service_path directory${NC}"
+        return 1
+    }
+    
+    cargo run --release > "../logs/${service_name}.log" 2>&1 &
+    local pid=$!
+    echo $pid > "../pids/${service_name}.pid"
+    
+    echo -e "${GREEN}Started $service_name (PID: $pid)${NC}"
+    cd - > /dev/null
+}
+
+# Create directories for logs and PIDs
+mkdir -p logs pids
 
 # Start services in order
-echo "Starting Indonesian Accounting System..."
+echo "Starting core services first..."
 
-# Start core services first
-echo "Starting Auth Service..."
-cargo run --bin auth-service &
-AUTH_PID=$!
+start_service "auth-service" "services/auth" "3001"
+sleep 2
 
-echo "Starting Company Management Service..."
-cargo run --bin company-management-service &
-COMPANY_PID=$!
+start_service "company-management-service" "services/company-management" "3002"
+sleep 2
 
-echo "Starting Chart of Accounts Service..."
-cargo run --bin chart-of-accounts-service &
-COA_PID=$!
+start_service "chart-of-accounts-service" "services/chart-of-accounts" "3003"
+sleep 2
 
-# Wait a bit for core services to start
-sleep 5
+start_service "general-ledger-service" "services/general-ledger" "3004"
+sleep 2
 
-# Start business logic services
-echo "Starting General Ledger Service..."
-cargo run --bin general-ledger-service &
-GL_PID=$!
+echo "Starting business services..."
 
-echo "Starting Indonesian Tax Service..."
-cargo run --bin indonesian-tax-service &
-TAX_PID=$!
+start_service "indonesian-tax-service" "services/indonesian-tax" "3005"
+sleep 2
 
-echo "Starting Accounts Payable Service..."
-cargo run --bin accounts-payable-service &
-AP_PID=$!
+start_service "accounts-payable-service" "services/accounts-payable" "3006"
+sleep 2
 
-echo "Starting Accounts Receivable Service..."
-cargo run --bin accounts-receivable-service &
-AR_PID=$!
+start_service "accounts-receivable-service" "services/accounts-receivable" "3007"
+sleep 2
 
-echo "Starting Inventory Management Service..."
-cargo run --bin inventory-management-service &
-INV_PID=$!
+start_service "inventory-management-service" "services/inventory-management" "3008"
+sleep 2
 
-# Wait for business services
-sleep 5
+start_service "reporting-service" "services/reporting" "3009"
+sleep 2
 
-# Start reporting service
-echo "Starting Reporting Service..."
-cargo run --bin reporting-service &
-REP_PID=$!
-
-# Finally start API Gateway
 echo "Starting API Gateway..."
-cargo run --bin api-gateway &
-GATEWAY_PID=$!
+start_service "api-gateway" "services/api-gateway" "3000"
 
-echo "All services started!"
-echo "API Gateway: http://localhost:8080"
-
-# Wait for any service to exit
-wait $AUTH_PID $COMPANY_PID $COA_PID $GL_PID $TAX_PID $AP_PID $AR_PID $INV_PID $REP_PID $GATEWAY_PID
+echo -e "${GREEN}All services started successfully!${NC}"
+echo -e "${YELLOW}API Gateway is available at: http://localhost:3000${NC}"
+echo ""
+echo "Service status:"
+echo "  - API Gateway:              http://localhost:3000"
+echo "  - Auth Service:             http://localhost:3001"
+echo "  - Company Management:       http://localhost:3002"
+echo "  - Chart of Accounts:        http://localhost:3003"
+echo "  - General Ledger:           http://localhost:3004"
+echo "  - Indonesian Tax:           http://localhost:3005"
+echo "  - Accounts Payable:         http://localhost:3006"
+echo "  - Accounts Receivable:      http://localhost:3007"
+echo "  - Inventory Management:     http://localhost:3008"
+echo "  - Reporting:                http://localhost:3009"
+echo ""
+echo "To stop services, run: ./scripts/stop-services.sh"
+echo "To check logs, run: tail -f logs/[service-name].log"
