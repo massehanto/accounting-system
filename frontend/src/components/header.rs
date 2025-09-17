@@ -1,4 +1,6 @@
-// Add this import at the top of frontend/src/components/header.rs
+// frontend/src/components/header.rs
+use leptos::*;
+use leptos_router::*;
 use crate::stores::*;
 
 // Update the Header component signature to accept the menu click handler:

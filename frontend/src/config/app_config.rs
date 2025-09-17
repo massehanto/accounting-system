@@ -25,8 +25,13 @@ pub struct FeatureFlags {
 
 impl AppConfig {
     pub fn load() -> Self {
+        // Use option_env! instead of std::env! for optional environment variables
+        let api_base_url = option_env!("API_BASE_URL")
+            .unwrap_or("/api")
+            .to_string();
+            
         Self {
-            api_base_url: std::env!("API_BASE_URL", "/api").to_string(),
+            api_base_url,
             app_name: "Sistem Akuntansi Indonesia".to_string(),
             version: env!("CARGO_PKG_VERSION").to_string(),
             environment: if cfg!(debug_assertions) { 
