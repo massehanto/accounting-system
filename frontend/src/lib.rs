@@ -11,7 +11,6 @@ pub mod utils;
 pub mod error;
 pub mod stores;
 pub mod hooks;
-pub mod services;
 pub mod config;
 
 // Re-exports for easier imports
@@ -38,7 +37,7 @@ fn initialize_pwa() {
         .and_then(|w| w.navigator().service_worker().ok()) 
     {
         wasm_bindgen_futures::spawn_local(async move {
-            match navigator.register("/sw.js").await { // Fix path
+            match navigator.register("./sw.js").await { // Fix path
                 Ok(_) => web_sys::console::log_1(&"✅ Service Worker registered".into()),
                 Err(e) => web_sys::console::error_1(&format!("❌ SW registration failed: {:?}", e).into()),
             }

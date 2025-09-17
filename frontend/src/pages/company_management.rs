@@ -1,6 +1,7 @@
 // frontend/src/pages/company_management.rs
 use leptos::*;
 use crate::{api, utils};
+use gloo_net::http::Request;
 
 #[component]
 pub fn CompanyManagementPage() -> impl IntoView {
@@ -227,20 +228,31 @@ where
                 });
 
                 spawn_local(async move {
-                    match reqwest::Client::new()
-                        .put(&format!("/api/companies/{}", id_str))
+                    // Get auth token
+                    let token = utils::get_token().unwrap_or_default();
+                    
+                    match Request::put(&format!("/api/companies/{}", id_str))
+                        .header("Authorization", &format!("Bearer {}", token))
                         .json(&update_data)
-                        .send()
-                        .await
-                    {
-                        Ok(response) if response.status().is_success() => {
-                            on_updated(());
-                        }
-                        Ok(response) => {
-                            set_error.set(Some(format!("Gagal memperbarui: {}", response.status())));
+                        .map_err(|e| format!("Request error: {}", e))
+                        .and_then(|request| {
+                            Ok(request)
+                        }) {
+                        Ok(request) => {
+                            match request.send().await {
+                                Ok(response) if response.ok() => {
+                                    on_updated(());
+                                }
+                                Ok(response) => {
+                                    set_error.set(Some(format!("Gagal memperbarui: {}", response.status())));
+                                }
+                                Err(e) => {
+                                    set_error.set(Some(format!("Network error: {}", e)));
+                                }
+                            }
                         }
                         Err(e) => {
-                            set_error.set(Some(format!("Error: {}", e)));
+                            set_error.set(Some(e));
                         }
                     }
                     set_loading.set(false);
