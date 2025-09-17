@@ -1,0 +1,345 @@
+/* frontend/style.css - Enhanced with modern CSS features */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+:root {
+    --primary-50: #eff6ff;
+    --primary-500: #3b82f6;
+    --primary-600: #2563eb;
+    --primary-700: #1d4ed8;
+    --primary-900: #1e3a8a;
+    
+    --sidebar-width: 16rem;
+    --header-height: 4rem;
+    
+    /* CSS Custom Properties for theming */
+    --border-radius-base: 0.5rem;
+    --border-radius-lg: 0.75rem;
+    --transition-base: 0.2s ease-in-out;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Modern scrollbar styling */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgb(249 250 251);
+    border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgb(209 213 219);
+    border-radius: 3px;
+    transition: background var(--transition-base);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgb(156 163 175);
+}
+
+/* Enhanced form styling with modern focus states */
+.form-input {
+    @apply block w-full px-3 py-2.5 border border-gray-300 rounded-lg shadow-sm 
+           placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 
+           focus:border-primary-500 text-sm transition-all duration-200 
+           bg-white hover:border-gray-400;
+}
+
+.form-input:focus {
+    @apply ring-2 ring-primary-500/20 border-primary-500 shadow-lg;
+}
+
+.form-input.error {
+    @apply border-red-500 focus:border-red-500 focus:ring-red-500/20 bg-red-50;
+}
+
+.form-select {
+    @apply block w-full px-3 py-2.5 border border-gray-300 bg-white rounded-lg 
+           shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 
+           focus:border-primary-500 text-sm transition-all duration-200 
+           hover:border-gray-400 cursor-pointer;
+}
+
+.form-label {
+    @apply block text-sm font-medium text-gray-700 mb-2;
+}
+
+/* Modern button styling with enhanced states */
+.btn-primary {
+    @apply inline-flex justify-center items-center px-4 py-2.5 border border-transparent 
+           shadow-sm text-sm font-medium rounded-lg text-white bg-primary-600 
+           hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 
+           focus:ring-primary-500 disabled:opacity-50 disabled:cursor-not-allowed 
+           transition-all duration-200 active:transform active:scale-95;
+}
+
+.btn-secondary {
+    @apply inline-flex justify-center items-center px-4 py-2.5 border border-gray-300 
+           shadow-sm text-sm font-medium rounded-lg text-gray-700 bg-white 
+           hover:bg-gray-50 hover:border-gray-400 focus:outline-none focus:ring-2 
+           focus:ring-offset-2 focus:ring-primary-500 disabled:opacity-50 
+           disabled:cursor-not-allowed transition-all duration-200 
+           active:transform active:scale-95;
+}
+
+.btn-danger {
+    @apply inline-flex justify-center items-center px-4 py-2.5 border border-transparent 
+           shadow-sm text-sm font-medium rounded-lg text-white bg-red-600 
+           hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 
+           focus:ring-red-500 disabled:opacity-50 disabled:cursor-not-allowed 
+           transition-all duration-200 active:transform active:scale-95;
+}
+
+/* Enhanced table styling */
+.table-container {
+    @apply overflow-hidden shadow-sm ring-1 ring-gray-200 rounded-xl bg-white;
+}
+
+.table-header {
+    @apply px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase 
+           tracking-wider bg-gray-50 border-b border-gray-200;
+}
+
+.table-cell {
+    @apply px-6 py-4 whitespace-nowrap text-sm text-gray-900 border-b border-gray-100;
+}
+
+.table-row {
+    @apply bg-white hover:bg-gray-50 transition-colors duration-150 cursor-pointer;
+}
+
+/* Modern card styling with depth */
+.card {
+    @apply bg-white shadow-sm border border-gray-200 rounded-xl 
+           hover:shadow-md transition-shadow duration-200;
+}
+
+.card-header {
+    @apply px-6 py-4 border-b border-gray-200 bg-gray-50 rounded-t-xl;
+}
+
+.card-body {
+    @apply px-6 py-5;
+}
+
+/* Enhanced badge system */
+.badge {
+    @apply inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium 
+           ring-1 ring-inset;
+}
+
+.badge-success {
+    @apply bg-green-50 text-green-700 ring-green-600/20;
+}
+
+.badge-warning {
+    @apply bg-yellow-50 text-yellow-700 ring-yellow-600/20;
+}
+
+.badge-danger {
+    @apply bg-red-50 text-red-700 ring-red-600/20;
+}
+
+.badge-info {
+    @apply bg-blue-50 text-blue-700 ring-blue-600/20;
+}
+
+/* Modern modal styling */
+.modal-overlay {
+    @apply fixed inset-0 bg-gray-600/75 backdrop-blur-sm overflow-y-auto h-full w-full 
+           z-50 flex items-center justify-center p-4 animate-fade-in;
+}
+
+.modal-container {
+    @apply relative bg-white rounded-2xl shadow-2xl max-w-lg w-full max-h-[90vh] 
+           overflow-y-auto animate-slide-up border border-gray-200;
+}
+
+.modal-header {
+    @apply px-6 py-4 border-b border-gray-200 rounded-t-2xl bg-gray-50;
+}
+
+.modal-body {
+    @apply px-6 py-5;
+}
+
+.modal-footer {
+    @apply px-6 py-4 bg-gray-50 border-t border-gray-200 rounded-b-2xl 
+           flex justify-end space-x-3;
+}
+
+/* Enhanced sidebar styling */
+.sidebar {
+    @apply bg-gray-900 text-white w-64 fixed inset-y-0 left-0 z-40 
+           transform transition-transform duration-300 ease-in-out 
+           border-r border-gray-800;
+}
+
+.sidebar-open {
+    @apply translate-x-0;
+}
+
+.sidebar-closed {
+    @apply -translate-x-full;
+}
+
+/* Modern navigation styling */
+.nav-link {
+    @apply flex items-center space-x-3 px-4 py-3 rounded-lg text-sm font-medium 
+           transition-all duration-200 hover:bg-gray-800 group;
+}
+
+.nav-link-active {
+    @apply bg-primary-600 text-white shadow-lg;
+}
+
+/* Enhanced loading animations */
+.spinner {
+    @apply inline-block animate-spin rounded-full border-2 border-transparent 
+           border-t-current h-4 w-4;
+}
+
+/* Responsive design improvements */
+@media (max-width: 768px) {
+    .sidebar {
+        @apply w-full max-w-sm;
+    }
+    
+    .table-container {
+        @apply rounded-lg;
+    }
+    
+    .modal-container {
+        @apply mx-4 max-w-none rounded-xl;
+    }
+    
+    .card {
+        @apply rounded-lg;
+    }
+}
+
+/* Dark mode support (future enhancement) */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --primary-50: #1e3a8a;
+        --primary-500: #60a5fa;
+        --primary-600: #3b82f6;
+        --primary-700: #2563eb;
+        --primary-900: #eff6ff;
+    }
+}
+
+/* Accessibility improvements */
+@media (prefers-reduced-motion: reduce) {
+    .animate-spin,
+    .animate-fade-in,
+    .animate-slide-up,
+    .transition-all,
+    .transition-colors,
+    .transition-transform {
+        animation: none !important;
+        transition: none !important;
+    }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    .form-input,
+    .form-select {
+        @apply border-2 border-gray-900;
+    }
+    
+    .btn-primary {
+        @apply border-2 border-primary-900;
+    }
+}
+
+/* Print styles */
+@media print {
+    .sidebar,
+    .no-print {
+        display: none !important;
+    }
+    
+    .card {
+        @apply shadow-none border border-gray-300;
+    }
+}
+
+/* Utility classes for Indonesian formatting */
+.currency-idr {
+    font-variant-numeric: tabular-nums;
+}
+
+.currency-idr::before {
+    content: "Rp ";
+    @apply text-gray-500 font-normal;
+}
+
+.npwp-format {
+    @apply font-mono tracking-wider text-sm;
+}
+
+/* Custom focus indicators for accessibility */
+.focus-visible:focus {
+    @apply outline-none ring-2 ring-offset-2 ring-primary-500;
+}
+
+/* Enhanced loading state */
+.loading-dots::after {
+    content: '';
+    animation: loading-dots 1.5s infinite;
+}
+
+@keyframes loading-dots {
+    0%, 20% { content: ''; }
+    40% { content: '.'; }
+    60% { content: '..'; }
+    80%, 100% { content: '...'; }
+}
+
+/* Indonesian-specific styling */
+.rupiah-amount {
+    @apply font-mono text-right tabular-nums;
+}
+
+.text-balance-positive {
+    @apply text-green-600 font-medium;
+}
+
+.text-balance-negative {
+    @apply text-red-600 font-medium;
+}
+
+/* Modern alert styling */
+.alert {
+    @apply p-4 rounded-xl border-l-4 shadow-sm;
+}
+
+.alert-success {
+    @apply bg-green-50 border-green-400 text-green-800;
+}
+
+.alert-warning {
+    @apply bg-yellow-50 border-yellow-400 text-yellow-800;
+}
+
+.alert-danger {
+    @apply bg-red-50 border-red-400 text-red-800;
+}
+
+.alert-info {
+    @apply bg-blue-50 border-blue-400 text-blue-800;
+}

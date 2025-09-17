@@ -1,0 +1,33 @@
+[package]
+name = "api-gateway"
+version = "0.1.0"
+edition = "2021"
+
+[[bin]]
+name = "api-gateway"
+path = "src/main.rs"
+
+[dependencies]
+# Workspace dependencies
+tokio = { workspace = true }
+axum = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+uuid = { workspace = true }
+chrono = { workspace = true }
+tracing = { workspace = true }
+tracing-subscriber = { workspace = true }
+anyhow = { workspace = true }
+thiserror = { workspace = true }
+dotenv = { workspace = true }
+
+# Shared crates
+common = { path = "../../shared/common" }
+auth-shared = { path = "../../shared/auth" }
+utils = { path = "../../shared/utils" }
+
+# Gateway-specific dependencies
+reqwest = { version = "0.11", features = ["json"] }
+tower = "0.4"
+tower-http = { version = "0.5", features = ["cors", "trace", "timeout"] }
+hyper = "1.0"

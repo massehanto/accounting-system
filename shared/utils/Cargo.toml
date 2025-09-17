@@ -1,0 +1,17 @@
+[package]
+name = "utils"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+# Workspace dependencies
+serde = { workspace = true }
+serde_json = { workspace = true }
+uuid = { workspace = true }
+chrono = { workspace = true }
+rust_decimal = { workspace = true }
+
+# Utils-specific dependencies
+regex = "1.0"
+base64 = "0.21"
+sha2 = "0.10"
