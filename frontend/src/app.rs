@@ -13,7 +13,6 @@ use crate::{api, utils};
 pub fn App() -> impl IntoView {
     provide_meta_context();
     
-    // Global state providers
     let (auth_state, set_auth_state) = create_auth_store();
     let (offline_state, _) = use_offline();
     
@@ -21,7 +20,6 @@ pub fn App() -> impl IntoView {
     provide_context(set_auth_state);
     provide_context(offline_state);
 
-    // SEO and PWA meta tags
     view! {
         <Html lang="id"/>
         <Title text="Sistem Akuntansi Indonesia"/>
@@ -29,14 +27,12 @@ pub fn App() -> impl IntoView {
         <Meta name="theme-color" content="#2563eb"/>
         <Meta name="apple-mobile-web-app-capable" content="yes"/>
         <Meta name="apple-mobile-web-app-status-bar-style" content="default"/>
-        <Link rel="apple-touch-icon" href="/public/icons/icon-192x192.png"/>
-        <Link rel="manifest" href="/public/manifest.json"/>
+        <Link rel="apple-touch-icon" href="/icons/icon-192x192.png"/>
+        <Link rel="manifest" href="/manifest.json"/>
         
         <Router>
             <main class="min-h-screen bg-gray-50">
-                // Global offline indicator
                 <OfflineIndicator/>
-                
                 <Routes>
                     <Route path="/login" view=LoginPage/>
                     <Route path="/*any" view=AuthenticatedApp/>
@@ -48,7 +44,7 @@ pub fn App() -> impl IntoView {
 
 #[component]
 fn OfflineIndicator() -> impl IntoView {
-    let offline_state = use_context::<ReadSignal<super::hooks::OfflineState>>()
+    let offline_state = use_context::<ReadSignal<crate::hooks::OfflineState>>()
         .expect("OfflineState not provided");
 
     view! {
@@ -67,7 +63,6 @@ fn AuthenticatedApp() -> impl IntoView {
     let set_auth_state = use_context::<WriteSignal<AuthState>>()
         .expect("AuthState setter not provided");
     
-    // Check authentication on mount with better error handling
     create_effect(move |_| {
         spawn_local(async move {
             set_auth_state.update(|state| state.is_loading = true);
@@ -75,17 +70,23 @@ fn AuthenticatedApp() -> impl IntoView {
             if let Some(token) = utils::get_token() {
                 match api::verify_token(&token).await {
                     Ok(_) => {
-                        set_auth_state.update(|state| {
-                            state.is_authenticated = true;
-                            state.token = Some(token);
-                            state.is_loading = false;
-                        });
+                        if let (Some(user_id), Some(company_id)) = (utils::get_user_id(), utils::get_company_id()) {
+                            set_auth_state.update(|state| {
+                                state.is_authenticated = true;
+                                state.token = Some(token);
+                                state.company_id = Some(company_id);
+                                state.is_loading = false;
+                            });
+                        } else {
+                            utils::clear_user_data();
+                            set_auth_state.update(|state| *state = AuthState::default());
+                            let navigate = use_navigate();
+                            navigate("/login", Default::default());
+                        }
                     },
                     Err(_) => {
                         utils::clear_user_data();
-                        set_auth_state.update(|state| {
-                            *state = AuthState::default();
-                        });
+                        set_auth_state.update(|state| *state = AuthState::default());
                         let navigate = use_navigate();
                         navigate("/login", Default::default());
                     }

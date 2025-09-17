@@ -1,15 +1,14 @@
 // frontend/src/components/header.rs
 use leptos::*;
 use leptos_router::*;
-use crate::stores::*;
 
-// Update the Header component signature to accept the menu click handler:
 #[component]
 pub fn Header(
-    #[prop(optional)] on_menu_click: Option<Box<dyn Fn()>>,
+    #[prop(optional)] on_menu_click: Option<Callback<()>>,
 ) -> impl IntoView {
     let logout = move |_| {
         crate::utils::remove_token();
+        crate::utils::clear_user_data();
         let navigate = use_navigate();
         navigate("/login", Default::default());
     };
@@ -18,13 +17,12 @@ pub fn Header(
         <header class="bg-white shadow-sm border-b border-gray-200">
             <div class="flex items-center justify-between px-6 py-4">
                 <div class="flex items-center">
-                    // Mobile menu button
                     <Show when=move || on_menu_click.is_some()>
                         <button
                             class="mr-4 lg:hidden p-2 rounded-md hover:bg-gray-100"
                             on:click=move |_| {
-                                if let Some(ref handler) = on_menu_click {
-                                    handler();
+                                if let Some(handler) = on_menu_click {
+                                    handler.call(());
                                 }
                             }
                         >
@@ -34,7 +32,7 @@ pub fn Header(
                         </button>
                     </Show>
                     <h1 class="text-xl font-semibold text-gray-800">
-                        "Indonesian Accounting System"
+                        "Sistem Akuntansi Indonesia"
                     </h1>
                 </div>
                 
