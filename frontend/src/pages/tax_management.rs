@@ -241,7 +241,8 @@ pub fn TaxManagementPage() -> impl IntoView {
                                                         </td>
                                                         <td class="table-cell">{description}</td>
                                                     </tr>
-                                                }).collect::<Vec<_>>()}
+                                                }
+                                            }).collect::<Vec<_>>()}
                                         </tbody>
                                     </table>
                                 </Show>
