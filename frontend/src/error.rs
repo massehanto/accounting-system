@@ -23,6 +23,19 @@ impl std::fmt::Display for AppError {
     }
 }
 
+// Enhanced error conversion implementations
+impl From<String> for AppError {
+    fn from(msg: String) -> Self {
+        AppError::UnexpectedError(msg)
+    }
+}
+
+impl From<gloo_net::Error> for AppError {
+    fn from(err: gloo_net::Error) -> Self {
+        AppError::NetworkError(err.to_string())
+    }
+}
+
 // Global error context
 #[derive(Clone)]
 pub struct ErrorContext {

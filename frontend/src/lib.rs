@@ -37,7 +37,7 @@ fn initialize_pwa() {
         .and_then(|w| w.navigator().service_worker().ok()) 
     {
         wasm_bindgen_futures::spawn_local(async move {
-            match navigator.register("./sw.js").await { // Fix path
+            match navigator.register("/sw.js").await { // Fixed path - removed "./"
                 Ok(_) => web_sys::console::log_1(&"✅ Service Worker registered".into()),
                 Err(e) => web_sys::console::error_1(&format!("❌ SW registration failed: {:?}", e).into()),
             }
@@ -57,6 +57,8 @@ fn setup_pwa_install_prompt() {
         event.prevent_default();
         web_sys::console::log_1(&"💾 PWA install prompt available".into());
         // Store the event for later use
+        // In a real implementation, you might want to store this in a global state
+        // to show a custom install button later
     }) as Box<dyn FnMut(_)>);
     
     let _ = window.add_event_listener_with_callback(
@@ -64,4 +66,16 @@ fn setup_pwa_install_prompt() {
         before_install_prompt.as_ref().unchecked_ref(),
     );
     before_install_prompt.forget();
+    
+    // Handle successful PWA installation
+    let app_installed = Closure::wrap(Box::new(move |_event: web_sys::Event| {
+        web_sys::console::log_1(&"🎉 PWA installed successfully".into());
+        // You could show a success message or update UI state here
+    }) as Box<dyn FnMut(_)>);
+    
+    let _ = window.add_event_listener_with_callback(
+        "appinstalled",
+        app_installed.as_ref().unchecked_ref(),
+    );
+    app_installed.forget();
 }

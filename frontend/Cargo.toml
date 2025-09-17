@@ -13,9 +13,6 @@ lto = true
 codegen-units = 1
 panic = "abort"
 
-[profile.release.package."*"]
-opt-level = "s"
-
 [dependencies]
 leptos = "0.8"
 leptos_meta = "0.8"
@@ -29,13 +26,9 @@ gloo-net = { version = "0.6", features = ["http"] }
 gloo-timers = { version = "0.3", features = ["futures"] }
 
 chrono = { version = "0.4", features = ["serde", "wasmbind"] }
-uuid = { version = "1.10", features = ["v4", "serde", "js"] }
 console_error_panic_hook = "0.1"
 js-sys = "0.3"
-tracing = "0.1"
 regex = "1.10"
-rust_decimal = { version = "1.36", features = ["serde"] }
-validator = { version = "0.18", features = ["derive"] }
 
 web-sys = { version = "0.3", features = [
   "console", "Window", "Document", "Element", 
