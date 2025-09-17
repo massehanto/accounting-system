@@ -6,25 +6,10 @@
     <title>Sistem Akuntansi Indonesia</title>
     <meta name="description" content="Sistem akuntansi lengkap untuk perusahaan Indonesia">
     
-    <!-- SEO and Social Media Meta Tags -->
-    <meta name="keywords" content="akuntansi, indonesia, sistem akuntansi, keuangan, bisnis">
-    <meta name="author" content="Indonesian Accounting System">
-    <meta property="og:title" content="Sistem Akuntansi Indonesia">
-    <meta property="og:description" content="Sistem akuntansi lengkap untuk perusahaan Indonesia">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://yourdomain.com">
-    <meta property="og:image" content="/public/icons/icon-512x512.png">
-    <meta name="twitter:card" content="summary_large_image">
-    
     <!-- Preload critical resources -->
     <link rel="preload" href="/pkg/accounting-frontend.wasm" as="fetch" type="application/wasm" crossorigin="">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     
-    <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    
-    <!-- Tailwind CSS with optimized configuration -->
+    <!-- Tailwind CSS v3.4 with latest features -->
     <script src="https://cdn.tailwindcss.com?v=3.4.0"></script>
     <script>
         tailwind.config = {
@@ -33,245 +18,88 @@
                     colors: {
                         primary: {
                             50: '#eff6ff',
-                            100: '#dbeafe',
-                            200: '#bfdbfe',
-                            300: '#93c5fd',
-                            400: '#60a5fa',
                             500: '#3b82f6',
                             600: '#2563eb',
                             700: '#1d4ed8',
-                            800: '#1e40af',
                             900: '#1e3a8a',
-                            950: '#172554'
-                        },
-                        gray: {
-                            50: '#f9fafb',
-                            100: '#f3f4f6',
-                            200: '#e5e7eb',
-                            300: '#d1d5db',
-                            400: '#9ca3af',
-                            500: '#6b7280',
-                            600: '#4b5563',
-                            700: '#374151',
-                            800: '#1f2937',
-                            900: '#111827',
-                            950: '#030712'
                         }
                     },
                     fontFamily: {
                         sans: ['Inter', 'system-ui', 'sans-serif'],
-                        mono: ['JetBrains Mono', 'Monaco', 'Consolas', 'monospace']
                     },
                     animation: {
                         'fade-in': 'fadeIn 0.5s ease-in-out',
                         'slide-up': 'slideUp 0.3s ease-out',
-                        'slide-down': 'slideDown 0.3s ease-out',
                         'bounce-gentle': 'bounceGentle 2s infinite',
-                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-                        'spin-slow': 'spin 3s linear infinite',
                     },
                     keyframes: {
                         fadeIn: {
-                            '0%': { opacity: '0', transform: 'translateY(-10px)' },
-                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' },
                         },
                         slideUp: {
-                            '0%': { transform: 'translateY(20px)', opacity: '0' },
-                            '100%': { transform: 'translateY(0)', opacity: '1' },
-                        },
-                        slideDown: {
-                            '0%': { transform: 'translateY(-20px)', opacity: '0' },
+                            '0%': { transform: 'translateY(10px)', opacity: '0' },
                             '100%': { transform: 'translateY(0)', opacity: '1' },
                         },
                         bounceGentle: {
-                            '0%, 100%': { transform: 'translateY(-3%)' },
+                            '0%, 100%': { transform: 'translateY(-5%)' },
                             '50%': { transform: 'translateY(0)' },
                         }
-                    },
-                    backdropBlur: {
-                        xs: '2px',
-                    },
-                    spacing: {
-                        '18': '4.5rem',
-                        '88': '22rem',
                     }
                 }
-            },
-            plugins: [
-                // Add form plugin for better form styling
-                function({ addUtilities }) {
-                    addUtilities({
-                        '.scrollbar-hide': {
-                            '-ms-overflow-style': 'none',
-                            'scrollbar-width': 'none',
-                            '&::-webkit-scrollbar': {
-                                display: 'none'
-                            }
-                        }
-                    })
-                }
-            ]
+            }
         }
     </script>
     
-    <!-- Trunk asset links - ORDER MATTERS -->
     <link data-trunk rel="rust" data-wasm-opt="z"/>
-    <link data-trunk rel="css" href="assets/styles/globals.css"/>
+    <link data-trunk rel="css" href="assets/styles/global.css"/>
     
-    <!-- PWA Configuration -->
-    <link rel="manifest" href="/public/manifest.json">
+    <!-- Progressive Web App -->
+    <link rel="manifest" href="/manifest.json">
     <meta name="theme-color" content="#2563eb">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <meta name="apple-mobile-web-app-title" content="AccSys ID">
-    <link rel="apple-touch-icon" href="/public/icons/icon-192x192.png">
     
-    <!-- Favicon -->
-    <link rel="icon" type="image/png" sizes="32x32" href="/public/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/public/favicon-16x16.png">
-    <link rel="shortcut icon" href="/public/favicon.ico">
-    
-    <!-- Additional meta tags for better mobile experience -->
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="msapplication-TileColor" content="#2563eb">
-    <meta name="msapplication-config" content="/public/browserconfig.xml">
-    
-    <!-- Security headers -->
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.tailwindcss.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self';">
-    
-    <!-- Performance optimization -->
-    <link rel="dns-prefetch" href="//fonts.googleapis.com">
-    <link rel="dns-prefetch" href="//fonts.gstatic.com">
-    <link rel="dns-prefetch" href="//cdn.tailwindcss.com">
-    
-    <!-- Structured data for better SEO -->
-    <script type="application/ld+json">
-    {
-        "@context": "https://schema.org",
-        "@type": "SoftwareApplication",
-        "name": "Sistem Akuntansi Indonesia",
-        "applicationCategory": "BusinessApplication",
-        "operatingSystem": "Web",
-        "description": "Sistem akuntansi lengkap untuk perusahaan Indonesia dengan fitur jurnal, laporan keuangan, dan manajemen pajak",
-        "offers": {
-            "@type": "Offer",
-            "price": "0",
-            "priceCurrency": "IDR"
-        }
-    }
-    </script>
+    <!-- Additional meta tags for better SEO and performance -->
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
-<body class="bg-gray-50 font-sans antialiased">
-    <!-- App container -->
-    <div id="app" class="min-h-screen"></div>
+<body class="bg-gray-50 font-sans">
+    <div id="app"></div>
     
-    <!-- Enhanced loading indicator with better UX -->
-    <div id="loading" class="fixed inset-0 flex items-center justify-center bg-white z-50 transition-opacity duration-300">
-        <div class="text-center px-4">
-            <!-- Logo or branding area -->
-            <div class="mb-8">
-                <div class="mx-auto w-16 h-16 bg-primary-100 rounded-2xl flex items-center justify-center mb-4">
-                    <span class="text-3xl">🧮</span>
-                </div>
-                <h1 class="text-2xl font-bold text-gray-900 mb-2">AccSys Indonesia</h1>
-            </div>
-            
-            <!-- Loading animation -->
-            <div class="inline-flex items-center px-6 py-3 bg-primary-50 rounded-xl shadow-sm">
-                <svg class="animate-spin -ml-1 mr-3 h-6 w-6 text-primary-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+    <!-- Enhanced loading indicator with Tailwind CSS v3.4 -->
+    <div id="loading" class="fixed inset-0 flex items-center justify-center bg-white z-50">
+        <div class="text-center">
+            <div class="inline-flex items-center px-4 py-2 bg-primary-50 rounded-lg">
+                <svg class="animate-spin -ml-1 mr-3 h-8 w-8 text-primary-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                     <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                     <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                 </svg>
-                <span class="text-primary-900 font-medium text-lg">Memuat Sistem Akuntansi</span>
+                <span class="text-primary-900 font-medium">Memuat Sistem Akuntansi...</span>
             </div>
-            
-            <!-- Loading progress text -->
-            <p class="mt-4 text-sm text-gray-500 animate-pulse">Menyiapkan aplikasi untuk Anda...</p>
-            
-            <!-- Loading progress bar -->
-            <div class="mt-6 w-64 mx-auto">
-                <div class="bg-gray-200 rounded-full h-1">
-                    <div class="bg-primary-600 h-1 rounded-full animate-pulse" style="width: 0%; animation: loadingProgress 3s ease-out forwards;"></div>
-                </div>
-            </div>
-            
-            <!-- Tips while loading -->
-            <div class="mt-8 max-w-md mx-auto">
-                <p class="text-xs text-gray-400 italic">💡 Tip: Gunakan Ctrl+K untuk pencarian cepat setelah aplikasi dimuat</p>
-            </div>
+            <p class="mt-4 text-sm text-gray-500">Menyiapkan aplikasi untuk Anda</p>
         </div>
     </div>
     
-    <!-- No JavaScript fallback -->
-    <noscript>
-        <div class="fixed inset-0 bg-white flex items-center justify-center z-50">
-            <div class="text-center px-4">
-                <div class="text-6xl mb-4">⚠️</div>
-                <h1 class="text-2xl font-bold text-gray-900 mb-4">JavaScript Diperlukan</h1>
-                <p class="text-gray-600 mb-6 max-w-md">
-                    Sistem Akuntansi Indonesia memerlukan JavaScript untuk berjalan. 
-                    Silakan aktifkan JavaScript di browser Anda dan muat ulang halaman.
-                </p>
-                <button onclick="window.location.reload()" class="px-6 py-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700">
-                    Muat Ulang Halaman
-                </button>
-            </div>
-        </div>
-    </noscript>
-    
-    <!-- Enhanced loading management script -->
     <script>
-        // Performance tracking
-        const loadStartTime = performance.now();
+        // Enhanced loading management
         let appLoaded = false;
-        
-        // Loading progress animation
-        const style = document.createElement('style');
-        style.textContent = `
-            @keyframes loadingProgress {
-                0% { width: 0%; }
-                25% { width: 30%; }
-                50% { width: 60%; }
-                75% { width: 85%; }
-                100% { width: 100%; }
-            }
-        `;
-        document.head.appendChild(style);
-        
-        // Hide loading function with better UX
         const hideLoading = () => {
             if (!appLoaded) {
                 appLoaded = true;
                 const loading = document.getElementById('loading');
-                const loadEndTime = performance.now();
-                const loadTime = Math.round(loadEndTime - loadStartTime);
-                
-                console.log(`⚡ App loaded in ${loadTime}ms`);
-                
                 if (loading) {
-                    // Smooth fade out
                     loading.style.opacity = '0';
-                    loading.style.transition = 'opacity 0.5s ease-out';
-                    
+                    loading.style.transition = 'opacity 0.3s ease-out';
                     setTimeout(() => {
                         loading.style.display = 'none';
-                        // Announce to screen readers
-                        const announcement = document.createElement('div');
-                        announcement.setAttribute('aria-live', 'polite');
-                        announcement.setAttribute('aria-label', 'Aplikasi telah dimuat');
-                        announcement.style.position = 'absolute';
-                        announcement.style.left = '-10000px';
-                        announcement.textContent = 'Sistem akuntansi berhasil dimuat';
-                        document.body.appendChild(announcement);
-                    }, 500);
+                    }, 300);
                 }
             }
         };
 
-        // Multiple loading completion triggers
-        const loadingPromises = [
-            // DOM ready
+        // Hide loading when DOM is ready and after minimum time
+        Promise.all([
             new Promise(resolve => {
                 if (document.readyState === 'complete') {
                     resolve();
@@ -279,70 +107,11 @@
                     window.addEventListener('load', resolve);
                 }
             }),
-            // Minimum loading time for better UX (prevent flash)
-            new Promise(resolve => setTimeout(resolve, 1200)),
-            // WASM loaded (detected by checking for app content)
-            new Promise(resolve => {
-                const checkApp = () => {
-                    const app = document.getElementById('app');
-                    if (app && app.children.length > 0) {
-                        resolve();
-                    } else {
-                        setTimeout(checkApp, 100);
-                    }
-                };
-                checkApp();
-            })
-        ];
+            new Promise(resolve => setTimeout(resolve, 1000))
+        ]).then(hideLoading);
 
-        // Wait for all loading conditions
-        Promise.all(loadingPromises).then(hideLoading);
-
-        // Fallback: hide loading after maximum time
-        setTimeout(() => {
-            if (!appLoaded) {
-                console.warn('⚠️ Loading timeout reached, showing app anyway');
-                hideLoading();
-            }
-        }, 8000);
-
-        // Error handling for failed loads
-        window.addEventListener('error', (e) => {
-            console.error('❌ Loading error:', e.error);
-            const loading = document.getElementById('loading');
-            if (loading && !appLoaded) {
-                loading.innerHTML = `
-                    <div class="text-center px-4">
-                        <div class="text-6xl mb-4 text-red-500">⚠️</div>
-                        <h1 class="text-2xl font-bold text-gray-900 mb-4">Gagal Memuat Aplikasi</h1>
-                        <p class="text-gray-600 mb-6">Terjadi kesalahan saat memuat sistem. Silakan muat ulang halaman.</p>
-                        <button onclick="window.location.reload()" class="px-6 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700">
-                            Muat Ulang
-                        </button>
-                    </div>
-                `;
-            }
-        });
-
-        // PWA install prompt handling
-        let deferredPrompt;
-        window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();
-            deferredPrompt = e;
-            // Show install button or notification
-            console.log('💾 PWA can be installed');
-        });
-
-        // Track PWA usage
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('/sw.js')
-                .then(registration => {
-                    console.log('🔧 SW registered:', registration);
-                })
-                .catch(error => {
-                    console.log('❌ SW registration failed:', error);
-                });
-        }
+        // Fallback: hide loading after 5 seconds
+        setTimeout(hideLoading, 5000);
     </script>
 </body>
 </html>
