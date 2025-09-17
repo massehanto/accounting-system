@@ -1,2 +1,4 @@
 Cargo.lock
+frontend/build.log
 frontend/Cargo.lock
+frontend/target/*

@@ -1,3 +1,4 @@
+// frontend/src/pages/chart_of_accounts.rs
 use leptos::*;
 use crate::{api, utils};
 
@@ -14,6 +15,7 @@ pub fn ChartOfAccountsPage() -> impl IntoView {
             match api::get_accounts().await {
                 Ok(account_list) => {
                     set_accounts.set(account_list);
+                    set_error.set(None);
                 }
                 Err(e) => {
                     set_error.set(Some(utils::handle_api_error(&e)));

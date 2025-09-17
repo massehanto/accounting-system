@@ -1,21 +1,20 @@
 // frontend/src/models.rs
 use serde::{Deserialize, Serialize};
-use uuid::Uuid;
 use chrono::NaiveDate;
 use rust_decimal::Decimal;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct User {
-    pub id: Uuid,
+    pub id: String, // Changed from Uuid to String
     pub email: String,
     pub full_name: String,
-    pub company_id: Uuid,
+    pub company_id: String, // Changed from Uuid to String
     pub is_active: bool,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Company {
-    pub id: Uuid,
+    pub id: String, // Changed from Uuid to String
     pub name: String,
     pub npwp: String,
     pub address: String,
@@ -25,8 +24,8 @@ pub struct Company {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Account {
-    pub id: Uuid,
-    pub company_id: Uuid,
+    pub id: String, // Changed from Uuid to String
+    pub company_id: String, // Changed from Uuid to String
     pub account_code: String,
     pub account_name: String,
     pub account_type: String,

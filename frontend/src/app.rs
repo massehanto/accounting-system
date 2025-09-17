@@ -2,6 +2,7 @@
 use leptos::*;
 use leptos_meta::*;
 use leptos_router::*;
+use leptos::context::{provide_context, use_context}; // Add this line
 
 use crate::components::*;
 use crate::pages::*;
@@ -70,7 +71,7 @@ fn AuthenticatedApp() -> impl IntoView {
             if let Some(token) = utils::get_token() {
                 match api::verify_token(&token).await {
                     Ok(_) => {
-                        if let (Some(user_id), Some(company_id)) = (utils::get_user_id(), utils::get_company_id()) {
+                        if let (Some(_user_id), Some(company_id)) = (utils::get_user_id(), utils::get_company_id()) {
                             set_auth_state.update(|state| {
                                 state.is_authenticated = true;
                                 state.token = Some(token);

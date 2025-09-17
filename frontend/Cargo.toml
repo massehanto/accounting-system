@@ -29,9 +29,12 @@ chrono = { version = "0.4", features = ["serde", "wasmbind"] }
 console_error_panic_hook = "0.1"
 js-sys = "0.3"
 regex = "1.10"
+rust_decimal = { version = "1.0", features = ["serde"] }
 
 web-sys = { version = "0.3", features = [
   "console", "Window", "Document", "Element", 
   "HtmlElement", "Storage", "Location",
-  "HtmlInputElement", "HtmlSelectElement"
+  "HtmlInputElement", "HtmlSelectElement",
+  "Event", "EventTarget", "Navigator", "ServiceWorkerContainer",
+  "ServiceWorkerRegistration"
 ]}
