@@ -1,16 +1,17 @@
-// frontend/src/components/header.rs
 use leptos::*;
 use leptos_router::*;
+use crate::stores::auth::AuthStore;
 
 #[component]
 pub fn Header(
     #[prop(optional)] on_menu_click: Option<Callback<()>>,
 ) -> impl IntoView {
+    let auth_store = expect_context::<AuthStore>();
+    let navigate = use_navigate();
+
     let logout = move |_| {
-        crate::utils::remove_token();
-        crate::utils::clear_user_data();
-        let navigate = use_navigate();
-        navigate("/login", Default::default());
+        auth_store.logout();
+        navigate("/login", NavigateOptions::default());
     };
 
     view! {
@@ -40,7 +41,9 @@ pub fn Header(
                     <div class="relative">
                         <button class="flex items-center space-x-2 text-gray-600 hover:text-gray-800">
                             <span class="text-sm">"👤"</span>
-                            <span class="text-sm font-medium">"User"</span>
+                            <span class="text-sm font-medium">
+                                {move || auth_store.get_user().map(|u| u.full_name).unwrap_or_else(|| "User".to_string())}
+                            </span>
                         </button>
                     </div>
                     

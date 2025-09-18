@@ -1,4 +1,3 @@
-// frontend/src/config/app_config.rs
 #[derive(Debug, Clone)]
 pub struct AppConfig {
     pub api_base_url: String,
@@ -25,13 +24,8 @@ pub struct FeatureFlags {
 
 impl AppConfig {
     pub fn load() -> Self {
-        // Use option_env! instead of std::env! for optional environment variables
-        let api_base_url = option_env!("API_BASE_URL")
-            .unwrap_or("/api")
-            .to_string();
-            
         Self {
-            api_base_url,
+            api_base_url: "/api".to_string(),
             app_name: "Sistem Akuntansi Indonesia".to_string(),
             version: env!("CARGO_PKG_VERSION").to_string(),
             environment: if cfg!(debug_assertions) { 

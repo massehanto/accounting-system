@@ -1,13 +1,32 @@
-// frontend/src/components/common/error_boundary.rs
 use leptos::*;
-use crate::error::AppError;
+
+#[derive(Clone, Debug)]
+pub enum AppError {
+    NetworkError(String),
+    AuthenticationError(String),
+    ValidationError(String),
+    BusinessLogicError(String),
+    UnexpectedError(String),
+}
+
+impl std::fmt::Display for AppError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            AppError::NetworkError(msg) => write!(f, "Kesalahan jaringan: {}", msg),
+            AppError::AuthenticationError(msg) => write!(f, "Kesalahan autentikasi: {}", msg),
+            AppError::ValidationError(msg) => write!(f, "Kesalahan validasi: {}", msg),
+            AppError::BusinessLogicError(msg) => write!(f, "Kesalahan bisnis: {}", msg),
+            AppError::UnexpectedError(msg) => write!(f, "Kesalahan tidak terduga: {}", msg),
+        }
+    }
+}
 
 #[component]
 pub fn ErrorBoundary(
     #[prop(optional)] fallback: Option<Box<dyn Fn(AppError) -> View>>,
     children: Children,
 ) -> impl IntoView {
-    let (error, set_error) = create_signal(None::<AppError>);
+    let error = create_rw_signal(None::<AppError>);
 
     let default_fallback = |error: AppError| {
         view! {
@@ -54,7 +73,7 @@ pub fn ErrorBoundary(
 #[component]
 pub fn ErrorAlert(
     error: ReadSignal<Option<AppError>>,
-    #[prop(optional)] on_dismiss: Option<Box<dyn Fn()>>,
+    #[prop(optional)] on_dismiss: Option<Callback<()>>,
 ) -> impl IntoView {
     view! {
         <Show when=move || error.get().is_some()>
@@ -77,8 +96,8 @@ pub fn ErrorAlert(
                             <button
                                 class="text-red-400 hover:text-red-600"
                                 on:click=move |_| {
-                                    if let Some(ref handler) = on_dismiss {
-                                        handler();
+                                    if let Some(handler) = on_dismiss {
+                                        handler.call(());
                                     }
                                 }
                             >

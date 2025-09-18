@@ -35,11 +35,7 @@ pub struct JournalEntry {
     pub status: JournalEntryStatus,
     pub is_posted: bool,
     pub created_by: String,
-    pub approved_by: Option<String>,
-    pub posted_by: Option<String>,
     pub created_at: String,
-    pub approved_at: Option<String>,
-    pub posted_at: Option<String>,
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
@@ -53,27 +49,4 @@ pub struct JournalEntryLine {
     pub debit_amount: f64,
     pub credit_amount: f64,
     pub line_number: i32,
-}
-
-#[derive(Debug, Serialize, Deserialize, Clone)]
-pub struct JournalEntryWithLines {
-    pub journal_entry: JournalEntry,
-    pub lines: Vec<JournalEntryLine>,
-}
-
-#[derive(Debug, Serialize, Deserialize)]
-pub struct CreateJournalEntryRequest {
-    pub company_id: String,
-    pub entry_date: String,
-    pub description: Option<String>,
-    pub reference: Option<String>,
-    pub lines: Vec<CreateJournalEntryLineRequest>,
-}
-
-#[derive(Debug, Serialize, Deserialize)]
-pub struct CreateJournalEntryLineRequest {
-    pub account_id: String,
-    pub description: Option<String>,
-    pub debit_amount: f64,
-    pub credit_amount: f64,
 }

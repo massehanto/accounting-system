@@ -6,11 +6,7 @@
     <title>Sistem Akuntansi Indonesia</title>
     <meta name="description" content="Sistem akuntansi lengkap untuk perusahaan Indonesia">
     
-    <!-- Preload critical resources -->
-    <link rel="preload" href="/pkg/frontend.wasm" as="fetch" type="application/wasm" crossorigin="">
-    
-    <!-- Tailwind CSS v3.4 with latest features -->
-    <script src="https://cdn.tailwindcss.com?v=3.4.0"></script>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio"></script>
     <script>
         tailwind.config = {
             theme: {
@@ -26,25 +22,6 @@
                     },
                     fontFamily: {
                         sans: ['Inter', 'system-ui', 'sans-serif'],
-                    },
-                    animation: {
-                        'fade-in': 'fadeIn 0.5s ease-in-out',
-                        'slide-up': 'slideUp 0.3s ease-out',
-                        'bounce-gentle': 'bounceGentle 2s infinite',
-                    },
-                    keyframes: {
-                        fadeIn: {
-                            '0%': { opacity: '0' },
-                            '100%': { opacity: '1' },
-                        },
-                        slideUp: {
-                            '0%': { transform: 'translateY(10px)', opacity: '0' },
-                            '100%': { transform: 'translateY(0)', opacity: '1' },
-                        },
-                        bounceGentle: {
-                            '0%, 100%': { transform: 'translateY(-5%)' },
-                            '50%': { transform: 'translateY(0)' },
-                        }
                     }
                 }
             }
@@ -53,65 +30,26 @@
     
     <link data-trunk rel="rust" data-wasm-opt="z"/>
     <link data-trunk rel="css" href="assets/styles/global.css"/>
-    
-    <!-- Progressive Web App -->
     <link rel="manifest" href="/manifest.json">
     <meta name="theme-color" content="#2563eb">
     
-    <!-- Additional meta tags for better SEO and performance -->
-    <meta name="robots" content="noindex, nofollow">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
-<body class="bg-gray-50 font-sans">
+<body class="bg-gray-50 font-sans antialiased">
     <div id="app"></div>
     
-    <!-- Enhanced loading indicator with Tailwind CSS v3.4 -->
     <div id="loading" class="fixed inset-0 flex items-center justify-center bg-white z-50">
         <div class="text-center">
-            <div class="inline-flex items-center px-4 py-2 bg-primary-50 rounded-lg">
-                <svg class="animate-spin -ml-1 mr-3 h-8 w-8 text-primary-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <div class="inline-flex items-center px-4 py-2 bg-blue-50 rounded-lg">
+                <svg class="animate-spin -ml-1 mr-3 h-8 w-8 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                     <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                     <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                 </svg>
-                <span class="text-primary-900 font-medium">Memuat Sistem Akuntansi...</span>
+                <span class="text-blue-900 font-medium">Memuat Sistem Akuntansi...</span>
             </div>
-            <p class="mt-4 text-sm text-gray-500">Menyiapkan aplikasi untuk Anda</p>
         </div>
     </div>
-    
-    <script>
-        // Enhanced loading management
-        let appLoaded = false;
-        const hideLoading = () => {
-            if (!appLoaded) {
-                appLoaded = true;
-                const loading = document.getElementById('loading');
-                if (loading) {
-                    loading.style.opacity = '0';
-                    loading.style.transition = 'opacity 0.3s ease-out';
-                    setTimeout(() => {
-                        loading.style.display = 'none';
-                    }, 300);
-                }
-            }
-        };
-
-        // Hide loading when DOM is ready and after minimum time
-        Promise.all([
-            new Promise(resolve => {
-                if (document.readyState === 'complete') {
-                    resolve();
-                } else {
-                    window.addEventListener('load', resolve);
-                }
-            }),
-            new Promise(resolve => setTimeout(resolve, 1000))
-        ]).then(hideLoading);
-
-        // Fallback: hide loading after 5 seconds
-        setTimeout(hideLoading, 5000);
-    </script>
 </body>
 </html>

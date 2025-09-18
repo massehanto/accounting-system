@@ -1,7 +1,12 @@
 use gloo_net::http::Request;
-use crate::types::{LoginRequest, LoginResponse};
+use serde::{Serialize, Deserialize};
+use crate::types::auth::{LoginRequest, LoginResponse};
 use crate::utils::storage;
-use super::{ApiError, API_BASE};
+
+#[derive(Serialize, Deserialize)]
+pub struct ApiError {
+    pub message: String,
+}
 
 pub async fn login(email: &str, password: &str) -> Result<LoginResponse, String> {
     let request = LoginRequest {
@@ -9,7 +14,7 @@ pub async fn login(email: &str, password: &str) -> Result<LoginResponse, String>
         password: password.to_string(),
     };
 
-    let response = Request::post(&format!("{}/auth/login", API_BASE))
+    let response = Request::post("/api/auth/login")
         .json(&request)
         .map_err(|e| format!("Request error: {}", e))?
         .send()
@@ -35,7 +40,7 @@ pub async fn login(email: &str, password: &str) -> Result<LoginResponse, String>
 }
 
 pub async fn verify_token(token: &str) -> Result<serde_json::Value, String> {
-    let response = Request::get(&format!("{}/auth/verify?token={}", API_BASE, token))
+    let response = Request::get(&format!("/api/auth/verify?token={}", token))
         .header("Authorization", &format!("Bearer {}", token))
         .send()
         .await

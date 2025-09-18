@@ -1,4 +1,4 @@
-pub fn required(value: &str) -> Option<String> {
+pub fn validate_required(value: &str) -> Option<String> {
     if value.trim().is_empty() {
         Some("This field is required".to_string())
     } else {
@@ -6,7 +6,7 @@ pub fn required(value: &str) -> Option<String> {
     }
 }
 
-pub fn email(value: &str) -> Option<String> {
+pub fn validate_email(value: &str) -> Option<String> {
     if value.trim().is_empty() {
         return None;
     }
@@ -19,7 +19,7 @@ pub fn email(value: &str) -> Option<String> {
     }
 }
 
-pub fn npwp(value: &str) -> Option<String> {
+pub fn validate_npwp(value: &str) -> Option<String> {
     if value.trim().is_empty() {
         return None;
     }
@@ -32,20 +32,7 @@ pub fn npwp(value: &str) -> Option<String> {
     }
 }
 
-pub fn phone(value: &str) -> Option<String> {
-    if value.trim().is_empty() {
-        return None;
-    }
-    
-    let phone_regex = regex::Regex::new(r"^(\+62|0)[0-9]{8,13}$").unwrap();
-    if phone_regex.is_match(value) {
-        None
-    } else {
-        Some("Please enter a valid Indonesian phone number".to_string())
-    }
-}
-
-pub fn currency(value: &str) -> Option<String> {
+pub fn validate_currency(value: &str) -> Option<String> {
     if value.trim().is_empty() {
         return None;
     }
@@ -54,21 +41,5 @@ pub fn currency(value: &str) -> Option<String> {
         None
     } else {
         Some("Please enter a valid amount".to_string())
-    }
-}
-
-pub fn percentage(value: &str) -> Option<String> {
-    if value.trim().is_empty() {
-        return None;
-    }
-    
-    if let Ok(val) = value.parse::<f64>() {
-        if val >= 0.0 && val <= 100.0 {
-            None
-        } else {
-            Some("Percentage must be between 0 and 100".to_string())
-        }
-    } else {
-        Some("Please enter a valid percentage".to_string())
     }
 }

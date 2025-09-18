@@ -1,4 +1,3 @@
-// frontend/src/components/sidebar.rs
 use leptos::*;
 use leptos_router::*;
 
@@ -9,28 +8,27 @@ pub fn Sidebar() -> impl IntoView {
     let menu_items = vec![
         ("Dashboard", "/", "📊"),
         ("Companies", "/companies", "🏢"),
-        ("Chart of Accounts", "/chart-of-accounts", "📋"),
+        ("Accounts", "/accounts", "📋"),
         ("Journal Entries", "/journal-entries", "📝"),
-        ("Accounts Payable", "/accounts-payable", "💸"),
-        ("Accounts Receivable", "/accounts-receivable", "💰"),
+        ("Vendors", "/vendors", "💸"),
+        ("Customers", "/customers", "💰"),
         ("Inventory", "/inventory", "📦"),
         ("Tax Management", "/tax", "🧾"),
         ("Reports", "/reports", "📊"),
     ];
 
     view! {
-        <div class="bg-gray-800 text-white w-64 space-y-6 py-7 px-2 absolute inset-y-0 left-0 transform -translate-x-full md:relative md:translate-x-0 transition duration-200 ease-in-out">
-            <div class="text-white flex items-center space-x-2 px-4">
+        <div class="bg-gray-800 text-white w-64 h-full flex flex-col">
+            <div class="flex items-center space-x-2 px-6 py-4 border-b border-gray-700">
                 <span class="text-2xl font-extrabold">"🧮"</span>
-                <span class="text-2xl font-extrabold">"AccSys"</span>
+                <span class="text-xl font-bold">"AccSys"</span>
             </div>
-            
-            <nav class="space-y-2">
+            <nav class="flex-1 px-4 py-6 space-y-2">
                 {menu_items.into_iter().map(|(name, path, icon)| {
                     let is_active = move || location.pathname.get() == path;
                     view! {
                         <A href=path class=move || {
-                            let base = "flex items-center space-x-2 py-2.5 px-4 rounded transition duration-200";
+                            let base = "flex items-center space-x-3 py-2.5 px-3 rounded-lg transition duration-200";
                             if is_active() {
                                 format!("{} bg-gray-700 text-white", base)
                             } else {

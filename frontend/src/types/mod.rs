@@ -1,9 +1,7 @@
 pub mod auth;
 pub mod journal;
-pub mod api;
-pub mod forms;
+pub mod common;
 
 pub use auth::*;
 pub use journal::*;
-pub use api::*;
-pub use forms::*;
+pub use common::*;

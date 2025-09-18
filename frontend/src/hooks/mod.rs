@@ -1,4 +1,3 @@
-// frontend/src/hooks/mod.rs
 pub mod use_api;
 pub mod use_offline;
 

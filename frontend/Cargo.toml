@@ -5,36 +5,28 @@ edition = "2021"
 
 [lib]
 crate-type = ["cdylib"]
-path = "src/lib.rs"
-
-[profile.release]
-opt-level = "s"
-lto = true
-codegen-units = 1
-panic = "abort"
 
 [dependencies]
-leptos = { version = "0.6", features = ["csr", "nightly"] }
-leptos_meta = { version = "0.6", features = ["csr", "nightly"] }
-leptos_router = { version = "0.6", features = ["csr", "nightly"] }
+leptos = { version = "0.4", features = ["csr"] }
+leptos_meta = { version = "0.4", features = ["csr"] }
+leptos_router = { version = "0.4", features = ["csr"] }
 
 wasm-bindgen = "0.2"
 wasm-bindgen-futures = "0.4"
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
-gloo-net = { version = "0.6", features = ["http"] }
+gloo-net = { version = "0.4", features = ["http"] }
 gloo-timers = { version = "0.3", features = ["futures"] }
+gloo-utils = "0.1"
 
 chrono = { version = "0.4", features = ["serde", "wasmbind"] }
 console_error_panic_hook = "0.1"
 js-sys = "0.3"
 regex = "1.10"
-rust_decimal = { version = "1.0", features = ["serde"] }
 
 web-sys = { version = "0.3", features = [
   "console", "Window", "Document", "Element", 
   "HtmlElement", "Storage", "Location",
   "HtmlInputElement", "HtmlSelectElement",
-  "Event", "EventTarget", "Navigator", "ServiceWorkerContainer",
-  "ServiceWorkerRegistration"
+  "Event", "EventTarget", "Navigator"
 ]}
