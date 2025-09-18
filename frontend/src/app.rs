@@ -1,14 +1,14 @@
-// frontend/src/app.rs
 use leptos::*;
 use leptos_meta::*;
 use leptos_router::*;
-use leptos::context::{provide_context, use_context}; // Add this line
 
-use crate::components::*;
+use crate::components::layout::AppLayout;
+use crate::components::features::OfflineIndicator;
 use crate::pages::*;
-use crate::stores::*;
-use crate::hooks::*;
-use crate::{api, utils};
+use crate::stores::{AuthStore, create_auth_store};
+use crate::hooks::use_offline;
+use crate::utils::storage;
+use crate::api::auth;
 
 #[component]
 pub fn App() -> impl IntoView {
@@ -17,8 +17,10 @@ pub fn App() -> impl IntoView {
     let (auth_state, set_auth_state) = create_auth_store();
     let (offline_state, _) = use_offline();
     
-    provide_context(auth_state);
-    provide_context(set_auth_state);
+    provide_context(AuthStore {
+        state: auth_state,
+        set_state: set_auth_state,
+    });
     provide_context(offline_state);
 
     view! {
@@ -44,70 +46,53 @@ pub fn App() -> impl IntoView {
 }
 
 #[component]
-fn OfflineIndicator() -> impl IntoView {
-    let offline_state = use_context::<ReadSignal<crate::hooks::OfflineState>>()
-        .expect("OfflineState not provided");
-
-    view! {
-        <Show when=move || !offline_state.get().is_online>
-            <div class="fixed top-0 left-0 right-0 bg-red-600 text-white px-4 py-2 text-sm text-center z-50">
-                "🔴 Tidak ada koneksi internet. Beberapa fitur mungkin terbatas."
-            </div>
-        </Show>
-    }
-}
-
-#[component]
 fn AuthenticatedApp() -> impl IntoView {
-    let auth_state = use_context::<ReadSignal<AuthState>>()
-        .expect("AuthState not provided");
-    let set_auth_state = use_context::<WriteSignal<AuthState>>()
-        .expect("AuthState setter not provided");
+    let auth_store = use_context::<AuthStore>()
+        .expect("AuthStore not provided");
+    
+    let navigate = use_navigate();
     
     create_effect(move |_| {
         spawn_local(async move {
-            set_auth_state.update(|state| state.is_loading = true);
+            auth_store.set_state.update(|state| state.is_loading = true);
             
-            if let Some(token) = utils::get_token() {
-                match api::verify_token(&token).await {
+            if let Some(token) = storage::get_token() {
+                match auth::verify_token(&token).await {
                     Ok(_) => {
-                        if let (Some(_user_id), Some(company_id)) = (utils::get_user_id(), utils::get_company_id()) {
-                            set_auth_state.update(|state| {
+                        if let (Some(_user_id), Some(company_id)) = (storage::get_user_id(), storage::get_company_id()) {
+                            auth_store.set_state.update(|state| {
                                 state.is_authenticated = true;
                                 state.token = Some(token);
                                 state.company_id = Some(company_id);
                                 state.is_loading = false;
                             });
                         } else {
-                            utils::clear_user_data();
-                            set_auth_state.update(|state| *state = AuthState::default());
-                            let navigate = use_navigate();
+                            storage::clear_user_data();
+                            auth_store.set_state.update(|state| *state = Default::default());
                             navigate("/login", Default::default());
                         }
                     },
                     Err(_) => {
-                        utils::clear_user_data();
-                        set_auth_state.update(|state| *state = AuthState::default());
-                        let navigate = use_navigate();
+                        storage::clear_user_data();
+                        auth_store.set_state.update(|state| *state = Default::default());
                         navigate("/login", Default::default());
                     }
                 }
             } else {
-                set_auth_state.update(|state| state.is_loading = false);
-                let navigate = use_navigate();
+                auth_store.set_state.update(|state| state.is_loading = false);
                 navigate("/login", Default::default());
             }
         });
     });
 
     view! {
-        <Suspense fallback=move || view! { <LoadingSpinner message="Memuat aplikasi...".to_string()/> }>
+        <Suspense fallback=move || view! { <LoadingSpinner message="Memuat aplikasi..."/> }>
             <Show 
-                when=move || !auth_state.get().is_loading
-                fallback=|| view! { <LoadingSpinner message="Memverifikasi autentikasi...".to_string()/> }
+                when=move || !auth_store.state.get().is_loading
+                fallback=|| view! { <LoadingSpinner message="Memverifikasi autentikasi..."/> }
             >
                 <Show 
-                    when=move || auth_state.get().is_authenticated 
+                    when=move || auth_store.state.get().is_authenticated 
                     fallback=|| view! { <LoginRedirect/> }
                 >
                     <AppLayout>
@@ -139,7 +124,7 @@ fn LoginRedirect() -> impl IntoView {
 
     view! {
         <div class="min-h-screen flex items-center justify-center">
-            <LoadingSpinner message="Mengalihkan ke halaman login...".to_string()/>
+            <LoadingSpinner message="Mengalihkan ke halaman login..."/>
         </div>
     }
 }

@@ -1,36 +1,4 @@
-// frontend/src/models.rs
 use serde::{Deserialize, Serialize};
-use chrono::NaiveDate;
-use rust_decimal::Decimal;
-
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct User {
-    pub id: String, // Changed from Uuid to String
-    pub email: String,
-    pub full_name: String,
-    pub company_id: String, // Changed from Uuid to String
-    pub is_active: bool,
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct Company {
-    pub id: String, // Changed from Uuid to String
-    pub name: String,
-    pub npwp: String,
-    pub address: String,
-    pub phone: Option<String>,
-    pub email: Option<String>,
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct Account {
-    pub id: String, // Changed from Uuid to String
-    pub company_id: String, // Changed from Uuid to String
-    pub account_code: String,
-    pub account_name: String,
-    pub account_type: String,
-    pub is_active: bool,
-}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct JournalEntryFormData {
@@ -69,6 +37,35 @@ impl Default for JournalEntryLineFormData {
             description: String::new(),
             debit_amount: String::new(),
             credit_amount: String::new(),
+        }
+    }
+}
+
+#[derive(Clone, Debug)]
+pub struct ValidationError {
+    pub field: String,
+    pub message: String,
+}
+
+#[derive(Debug, Clone)]
+pub struct CompanyFormData {
+    pub name: String,
+    pub npwp: String,
+    pub address: String,
+    pub phone: String,
+    pub email: String,
+    pub business_type: String,
+}
+
+impl Default for CompanyFormData {
+    fn default() -> Self {
+        Self {
+            name: String::new(),
+            npwp: String::new(),
+            address: String::new(),
+            phone: String::new(),
+            email: String::new(),
+            business_type: String::new(),
         }
     }
 }

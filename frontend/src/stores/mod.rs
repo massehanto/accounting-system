@@ -1,6 +1,5 @@
-// frontend/src/stores/mod.rs
-pub mod auth_store;
-pub mod app_store;
+pub mod auth;
+pub mod app;
 
-pub use auth_store::*;
-pub use app_store::*;
+pub use auth::*;
+pub use app::*;

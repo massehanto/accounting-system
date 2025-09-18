@@ -1,4 +1,3 @@
-// frontend/src/lib.rs
 use leptos::*;
 
 // Core modules
@@ -6,7 +5,7 @@ pub mod app;
 pub mod components;
 pub mod pages;
 pub mod api;
-pub mod models;
+pub mod types;
 pub mod utils;
 pub mod error;
 pub mod stores;
@@ -15,11 +14,7 @@ pub mod config;
 
 // Re-exports for easier imports
 pub use app::*;
-pub use components::*;
-pub use pages::*;
-pub use models::*;
 pub use error::*;
-pub use stores::*;
 
 #[wasm_bindgen::prelude::wasm_bindgen(start)]
 pub fn main() {
@@ -28,7 +23,7 @@ pub fn main() {
     // Enhanced PWA initialization
     initialize_pwa();
     
-    mount_to_body(|| view! { <App/> })
+    mount_to_body(App)
 }
 
 fn initialize_pwa() {
@@ -56,9 +51,6 @@ fn setup_pwa_install_prompt() {
         let before_install_prompt = Closure::wrap(Box::new(move |event: web_sys::Event| {
             event.prevent_default();
             web_sys::console::log_1(&"💾 PWA install prompt available".into());
-            // Store the event for later use
-            // In a real implementation, you might want to store this in a global state
-            // to show a custom install button later
         }) as Box<dyn FnMut(_)>);
         
         let _ = window.add_event_listener_with_callback(
@@ -67,10 +59,8 @@ fn setup_pwa_install_prompt() {
         );
         before_install_prompt.forget();
         
-        // Handle successful PWA installation
         let app_installed = Closure::wrap(Box::new(move |_event: web_sys::Event| {
             web_sys::console::log_1(&"🎉 PWA installed successfully".into());
-            // You could show a success message or update UI state here
         }) as Box<dyn FnMut(_)>);
         
         let _ = window.add_event_listener_with_callback(

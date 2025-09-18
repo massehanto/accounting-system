@@ -1,4 +1,3 @@
-// frontend/src/components/tables.rs
 use leptos::*;
 
 #[component]
@@ -33,25 +32,6 @@ pub fn DataTable(
                 </tbody>
             </table>
         </div>
-    }
-}
-
-#[component]
-pub fn StatusBadge(
-    status: String,
-    #[prop(optional)] variant: Option<String>, // "success", "warning", "danger", "info"
-) -> impl IntoView {
-    let badge_class = match variant.as_deref().unwrap_or("info") {
-        "success" => "badge-success",
-        "warning" => "badge-warning", 
-        "danger" => "badge-danger",
-        _ => "badge-info",
-    };
-
-    view! {
-        <span class=badge_class>
-            {status}
-        </span>
     }
 }
 
